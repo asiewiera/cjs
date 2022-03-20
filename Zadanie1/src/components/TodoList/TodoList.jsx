@@ -1,6 +1,11 @@
 import React from 'react';
 
-const TodoList = (props) => (
+const TodoList = (props) => {
+  if (!Array.isArray(props.todoList) || props.todoList.length === 0) {
+    return null;
+  }
+
+  return (
 
   <ul id="todoList">
   {console.log(props)}
@@ -11,7 +16,8 @@ const TodoList = (props) => (
   }
   </ul>
 
-);
+  );
+};
 
 // walidacja propsów
 
