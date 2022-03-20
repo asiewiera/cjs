@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from "./TodoList.module.css"
 
 const TodoList = (props) => {
   if (!Array.isArray(props.todoList) || props.todoList.length === 0) {
@@ -7,7 +8,7 @@ const TodoList = (props) => {
 
   return (
 
-  <ul id="todoList">
+  <ul id="todoList" className={styles.list}>
   {console.log(props)}
   {
     props.todoList.map((todo, index) => (

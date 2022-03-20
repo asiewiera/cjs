@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TodoList from '../TodoList/TodoList.jsx';
 
+import styles from './App.module.css';
+
 const TODO_ARRAY = [
   {
     name: 'Wynieść śmieci',
@@ -68,7 +70,7 @@ const App = () => {
   <h1>Todo List</h1>
   <form onSubmit={validate}>
     <input type='text' placeholder='Write todo' value={inputValue} onChange={handleOnChange}/>
-    {isErrorMessage ? <p style={{ color: 'red' }} id='error' >Text is too short. Length is below 3</p> : null}
+    {isErrorMessage ? <p className={styles.error} id='error' >Text is too short. Length is below 3</p> : null}
     <button type='submit'>send todo</button>
   </form>
   <TodoList todoList = {todos}/>
