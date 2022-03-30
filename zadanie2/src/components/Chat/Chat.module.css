@@ -1,0 +1,12 @@
+.chat {
+  padding: 10px;
+  color: green;
+}
+
+.chatPerson {
+  color: black;
+  text-decoration: underline;
+}
+.chatMessage {
+  color: blue;
+}

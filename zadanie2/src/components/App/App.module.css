@@ -1,0 +1,19 @@
+.chatForm {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.chatInput {
+  display: inline-block;
+  flex-grow: 1;
+}
+
+.mainBox {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 1000px;
+  
+  
+}
