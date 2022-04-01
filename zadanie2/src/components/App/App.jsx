@@ -23,6 +23,9 @@ function App() {
   const [inputMsg, setInputMsg] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
 
+  const [errorInPerson, setErrorInPerson] = useState(false);
+  const [errorInMsg, setErrorInMsg] = useState(false);
+
   useEffect(() => {
     const chatHistoryInit =
       JSON.parse(localStorage.getItem('chatHistory')) ?? [];
@@ -32,15 +35,27 @@ function App() {
   const handleInputPersonChange = (event) => {
     const input = event.target.value;
     setInputPerson(input);
+    setErrorInPerson(false);
   };
 
   const handleInputMsgChange = (event) => {
     const input = event.target.value;
     setInputMsg(input);
+    setErrorInMsg(false);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (inputMsg.length === 0) {
+      setErrorInMsg(true);
+      return;
+    }
+
+    if (inputPerson.length === 0) {
+      setErrorInPerson(true);
+      return;
+    }
 
     const lastChatHistory = [
       ...chatHistory,
@@ -51,7 +66,7 @@ function App() {
     ];
     setChatHistory(lastChatHistory);
 
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    localStorage.setItem('chatHistory', JSON.stringify(lastChatHistory));
   };
 
   return (
@@ -69,6 +84,10 @@ function App() {
               onChange={handleInputPersonChange}
             />
           </label>
+          {errorInPerson ? (
+            <p className={styles.error}>Field cannot be empty</p>
+          ) : null}
+
           <label htmlFor="inputMsg">
             Message
             <textarea
@@ -77,6 +96,9 @@ function App() {
               onChange={handleInputMsgChange}
             />
           </label>
+          {errorInMsg ? (
+            <p className={styles.error}>Field cannot be empty</p>
+          ) : null}
 
           <button type="submit">Send Msg</button>
         </form>
