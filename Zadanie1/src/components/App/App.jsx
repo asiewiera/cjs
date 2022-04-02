@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import TodoList from '../TodoList/TodoList.jsx';
 
 import styles from './App.module.css';
@@ -28,6 +29,24 @@ const App = () => {
     console.log('Run only on start');
   }, []);
 
+  const saveTodos = (inTodos) => {
+    setTodos(inTodos);
+    localStorage.setItem('todos', JSON.stringify(inTodos));
+  };
+
+  const handleTaskFinished = (id) => {
+    const index = todos.findIndex((todo) => (todo.id === id));
+    const newTodos = [...todos];
+    console.log('check', index);
+    newTodos[index].checked = !newTodos[index].checked;
+    saveTodos(newTodos);
+  };
+
+  const handleRemove = (id) => {
+    const filteredTodos = todos.filter((todo) => (todo.id !== id));
+    saveTodos(filteredTodos);
+  };
+
   const handleOnChange = (event) => {
     setInputValue(event.target.value);
     // setErrorMessage('');
@@ -35,7 +54,7 @@ const App = () => {
   };
   // console.log(inputValue);
 
-  const validate = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (inputValue.length < 3) {
       // setErrorMessage('Todo item is too short');
@@ -54,13 +73,13 @@ const App = () => {
     const newTodos = [
       ...todos,
       {
+        id: uuidv4(),
         name: inputValue,
         checked: false,
       },
     ];
-    setTodos(newTodos);
 
-    localStorage.setItem('todos', JSON.stringify(newTodos));
+    saveTodos(newTodos);
 
     // czyszczenie formularza
     setInputValue('');
@@ -68,12 +87,12 @@ const App = () => {
 
   return (<div>
   <h1>Todo List</h1>
-  <form onSubmit={validate}>
+  <form onSubmit={handleSubmit}>
     <input type='text' placeholder='Write todo' value={inputValue} onChange={handleOnChange}/>
     {isErrorMessage ? <p className={styles.error} id='error' >Text is too short. Length is below 3</p> : null}
     <button type='submit'>send todo</button>
   </form>
-  <TodoList todoList = {todos}/>
+  <TodoList todoList = {todos} onRemove = {handleRemove} onFinish= {handleTaskFinished}/>
 </div>);
 };
 
