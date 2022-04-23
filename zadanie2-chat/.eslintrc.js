@@ -27,5 +27,13 @@ module.exports = {
         extensions: ['.js', '.jsx'], // option to allow using JSX syntax within both ".js" and ".jsx" file extensions
       },
     ],
+    'react/button-has-type': 0,
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        moduleDirectory: ['node_modules', 'src/'],
+      },
+    },
   },
 };

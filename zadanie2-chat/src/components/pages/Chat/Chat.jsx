@@ -4,7 +4,7 @@ import styles from './Chat.module.css';
 
 function Chat({ history }) {
   if (!Array.isArray(history) || history.length === 0) return null;
-  console.log(history);
+  // console.log(history);
   return (
     <div className={styles.chat}>
       <ul>
