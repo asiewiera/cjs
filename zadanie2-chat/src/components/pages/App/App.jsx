@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 // import { v4 as uuid4 } from 'uuid';
-import { onValue, ref, set } from 'firebase/database';
 // eslint-disable-next-line import/no-cycle
-import database from 'firebase.js';
+
 import Button from 'components/elements/button/Button';
 import InputGroup from 'components/elements/inputGroup/InputGroup';
+import { observe, save, get } from 'services/firebase';
+import Main from 'components/layouts/main/Main';
+
 import Chat from '../Chat/Chat';
 
 import styles from './App.module.css';
@@ -34,14 +36,17 @@ function App() {
   const [errorInMsg, setErrorInMsg] = useState(false);
 
   useEffect(() => {
-    onValue(ref(database, '/'), (snapshot) => {
-      const data = snapshot.val();
-      setChatHistory(Object.values(data ?? {}));
-      // console.log('Data from database', Object.values(data));
+    // funkcja zaawansowana
+    observe('messages/', setChatHistory);
+    // const chatHistoryInit =
+    //   JSON.parse(localStorage.getItem('chatHistory')) ?? [];
+    // setChatHistory(chatHistoryInit);
+    get('currentUser').then((user) => {
+      console.log('User', user);
+      if (user && user.name) {
+        setInputPerson(user.name);
+      }
     });
-    const chatHistoryInit =
-      JSON.parse(localStorage.getItem('chatHistory')) ?? [];
-    setChatHistory(chatHistoryInit);
   }, []);
 
   const handleInputPersonChange = (event) => {
@@ -68,10 +73,15 @@ function App() {
       setErrorInPerson(true);
       return;
     }
-    const newMessageId = Date.now();
+    // const newMessageId = Date.now();
 
-    set(ref(database, `/${newMessageId}`), {
-      id: newMessageId,
+    // set(ref(database, `/${newMessageId}`), {
+    //   id: newMessageId,
+    //   person: inputPerson,
+    //   message: inputMsg,
+    // });
+
+    save('messages/', {
       person: inputPerson,
       message: inputMsg,
     });
@@ -86,67 +96,42 @@ function App() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <h1>Chat to chat</h1>
-      <div className={styles.chatBox}>
-        <Chat history={chatHistory} />
-      </div>
+    <Main>
+      <div className={styles.wrapper}>
+        <h1>Chat to chat</h1>
+        <div className={styles.chatBox}>
+          <Chat history={chatHistory} />
+        </div>
 
-      <div className={styles.chatForm}>
-        <form className={styles.chatForm} onSubmit={handleSubmit}>
-          <div>
-            {/* <div>
-              <label htmlFor="inputPerson" className={styles.chatInput}>
-                Person
-                <input
-                  type="text"
-                  id="inputPerson"
-                  value={inputPerson}
-                  onChange={handleInputPersonChange}
-                />
-              </label>
-              {errorInPerson ? (
-                <p className={styles.error}>Field cannot be empty</p>
-              ) : null}
-            </div> */}
-            {/* <div>
-              <label htmlFor="inputMsg">
-                Message
-                <textarea
-                  id="inputMsg"
-                  value={inputMsg}
-                  onChange={handleInputMsgChange}
-                />
-              </label>
-              {errorInMsg ? (
-                <p className={styles.error}>Field cannot be empty</p>
-              ) : null}
-            </div> */}
-            <InputGroup
-              inputId="inputPerson"
-              type="text"
-              label="Person"
-              handleInputChange={handleInputPersonChange}
-              inputValue={inputPerson}
-              errorInInput={errorInPerson}
-            />
-            <InputGroup
-              inputId="inputMsg"
-              type="text"
-              label="Message"
-              handleInputChange={handleInputMsgChange}
-              inputValue={inputMsg}
-              errorInInput={errorInMsg}
-            />
-            {/* Send Msg jest typu children */}
-            <Button type="submit">
-              <i>&#9728;</i>
-              Send Msg
-            </Button>
-          </div>
-        </form>
+        <div className={styles.chatForm}>
+          <form className={styles.chatForm} onSubmit={handleSubmit}>
+            <div>
+              <InputGroup
+                inputId="inputPerson"
+                type="text"
+                label="Person"
+                handleInputChange={handleInputPersonChange}
+                inputValue={inputPerson}
+                errorInInput={errorInPerson}
+              />
+              <InputGroup
+                inputId="inputMsg"
+                type="text"
+                label="Message"
+                handleInputChange={handleInputMsgChange}
+                inputValue={inputMsg}
+                errorInInput={errorInMsg}
+              />
+              {/* Send Msg jest typu children */}
+              <Button type="submit">
+                <i>&#9728;</i>
+                Send Msg
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Main>
   );
 }
 
