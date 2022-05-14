@@ -1,8 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Main from 'components/layouts/main/Main';
 
+import InputGroup from 'components/elements/input-group/InputGroup';
+import Button from 'components/elements/button/Button';
+
+import { loginUser } from 'services/firebase';
+import { useNavigate } from 'react-router-dom';
+
 function Login() {
-  return <Main>Hello from Login</Main>;
+  const [email, setEmail] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const [apiError, setAPiError] = useState('');
+
+  const navigate = useNavigate();
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleRegister = (event) => {
+    event.preventDefault();
+
+    loginUser(email, password)
+      .then((userCredential) => {
+        // Signed in
+        const { user } = userCredential;
+        console.log(user);
+        navigate('/dashboard');
+        // ...
+      })
+      .catch((error) => {
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        console.log(error.message);
+        setAPiError(error.message);
+        // ..
+      });
+  };
+
+  return (
+    <Main>
+      <h1>Sign In form</h1>
+      <form className="form" onSubmit={handleRegister}>
+        <InputGroup
+          id="email"
+          type="text"
+          label="Email"
+          handleChange={handleEmailChange}
+          inputValue={email}
+        />
+        <InputGroup
+          id="password"
+          type="text"
+          label="Password"
+          handleChange={handlePasswordChange}
+          inputValue={password}
+        />
+        <Button btnType="submit">Sign In</Button>
+        {apiError && <p>{apiError}</p>}
+      </form>
+    </Main>
+  );
 }
 
 export default Login;

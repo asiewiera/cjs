@@ -7,7 +7,12 @@ import {
   set,
 } from 'firebase/database';
 
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -23,7 +28,7 @@ const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 export const observe = (url, callback) =>
   onValue(ref(database, `${url}/`), (snapshot) => {
@@ -51,3 +56,11 @@ export const registerUser = (email, password) => {
 
   return createUserWithEmailAndPassword(auth, email, password);
 };
+
+export const loginUser = (email, password) => {
+  console.log('login', email, password);
+
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signOutUser = () => signOut(auth);
