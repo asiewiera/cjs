@@ -12,6 +12,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -64,3 +65,9 @@ export const loginUser = (email, password) => {
 };
 
 export const signOutUser = () => signOut(auth);
+
+export const updateUser = (displayName, photoURL) =>
+  updateProfile(auth.currentUser, {
+    displayName,
+    photoURL,
+  });

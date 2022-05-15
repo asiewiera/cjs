@@ -1,26 +1,29 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, signOutUser } from 'services/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { signOutUser } from 'services/firebase';
+
+import { MainContext } from 'contexts/main';
 import Button from '../button/Button';
 
 import styles from './style.module.css';
 
 function Header() {
-  const [currentUser, setCurrentUser] = useState(null);
-
   const navigate = useNavigate();
 
-  onAuthStateChanged(auth, (user) => {
-    setCurrentUser(user);
-  });
+  const { currentUser } = useContext(MainContext);
+
+  console.log('Context currentUser', currentUser);
+
+  if (currentUser && currentUser.photoURL) {
+    console.log('currentUserUrl', currentUser.photoUrl);
+  }
 
   const signOut = () => {
     signOutUser().then(() => {
       navigate('/');
     });
   };
-  console.log('currentUser', currentUser);
+
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerContainer}`}>
@@ -30,7 +33,21 @@ function Header() {
         <nav className={styles.navigation}>
           <ul>
             {currentUser ? (
-              <Button onClick={signOut}>Sign Out</Button>
+              <>
+                <Link to="/create">
+                  <Button>Add Post</Button>
+                </Link>
+                <img
+                  className={styles.avatar}
+                  src={currentUser.photoURL}
+                  alt="not defined"
+                />
+
+                <Link to="/me">
+                  <Button>My Profile</Button>
+                </Link>
+                <Button onClick={signOut}>Sign Out</Button>
+              </>
             ) : (
               <>
                 <li>

@@ -7,6 +7,8 @@ import Button from 'components/elements/button/Button';
 import { loginUser } from 'services/firebase';
 import { useNavigate } from 'react-router-dom';
 
+import { PublicRoute } from 'utils/AuthorizationRoutes';
+
 function Login() {
   const [email, setEmail] = useState('');
 
@@ -45,27 +47,29 @@ function Login() {
   };
 
   return (
-    <Main>
-      <h1>Sign In form</h1>
-      <form className="form" onSubmit={handleRegister}>
-        <InputGroup
-          id="email"
-          type="text"
-          label="Email"
-          handleChange={handleEmailChange}
-          inputValue={email}
-        />
-        <InputGroup
-          id="password"
-          type="text"
-          label="Password"
-          handleChange={handlePasswordChange}
-          inputValue={password}
-        />
-        <Button btnType="submit">Sign In</Button>
-        {apiError && <p>{apiError}</p>}
-      </form>
-    </Main>
+    <PublicRoute>
+      <Main>
+        <h1>Sign In form</h1>
+        <form className="form" onSubmit={handleRegister}>
+          <InputGroup
+            id="email"
+            type="text"
+            label="Email"
+            handleChange={handleEmailChange}
+            inputValue={email}
+          />
+          <InputGroup
+            id="password"
+            type="text"
+            label="Password"
+            handleChange={handlePasswordChange}
+            inputValue={password}
+          />
+          <Button btnType="submit">Sign In</Button>
+          {apiError && <p>{apiError}</p>}
+        </form>
+      </Main>
+    </PublicRoute>
   );
 }
 
