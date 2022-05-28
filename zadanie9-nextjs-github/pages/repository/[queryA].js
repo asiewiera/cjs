@@ -7,14 +7,14 @@ import Main from "@/components/layouts/main"
 
 
 
-export default function ResultsPages({title, results}) {
+export default function RepositoryPage({results}) {
   console.log(results);
   return (
     <Main>
     <Head>
-      <title>Results Page for {title}</title>
+      <title>Repository: </title>
     </Head>
-    <div className="w-2/3 mx-auto">
+    {/* <div className="w-2/3 mx-auto">
         <h1 className="text-center">Search for: <span className="font-bold">
         {title}</span></h1>
         <ul className="mt-8">
@@ -28,7 +28,7 @@ export default function ResultsPages({title, results}) {
               </div>
               <p className="mt-4">{el.description} </p>
               <p className="absolute top-2 right-2"> &#9733; {el.stargazers_count}</p>
-              <Link href={`/repository/${el.owner.login}-${el.name}`}>
+              <Link href={`/repository/${el.owner.login}-${el.id}`}>
                 <span className="block text-red-500 text-right pr-2 mt-2 cursor-pointer">
                   See details
                 </span>
@@ -39,20 +39,27 @@ export default function ResultsPages({title, results}) {
           
         </ul>
       </div>
-      
+       */}
     </Main>
   )
 }
 
 export async function getServerSideProps(context) {
-  
-  return fetch(`https://api.github.com/search/repositories?q=${context.params.query}`)
+
+  let repoUrl=context.params.queryA;
+  repoUrl =repoUrl.replace('-','/')
+
+  console.log('owner repo',repoUrl)
+
+
+
+  return fetch(`https://api.github.com/repos/${repoUrl}`)
   .then((res) => res.json())
   .then((results => {
+    console.log(results);
     return {
       props: {
-        title: context.params.query,
-        results: results.items
+        results: results
       },
     }
   }))
@@ -63,8 +70,6 @@ export async function getServerSideProps(context) {
       },
     }
   })
-
-  console.log('context req', context.params );
 
 
 }

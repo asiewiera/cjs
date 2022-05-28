@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="bg-gray-600 p-3 text-white text-center" >
     <nav>
-    Github App
+    <Link href="/">Github App</Link>
       {/* <ul className="flex">
         <li>
           <Link href='/'>Index</Link>
