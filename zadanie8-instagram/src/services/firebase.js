@@ -5,6 +5,7 @@ import {
   ref,
   get as FBget,
   set,
+  onChildAdded,
 } from 'firebase/database';
 
 import {
@@ -14,6 +15,13 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
+
+import {
+  getDownloadURL,
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+} from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -36,6 +44,13 @@ export const observe = (url, callback) =>
     const data = snapshot.val();
     // przekazalismy setMessages jako callback, poniewaz chcemy uruchomic ta funkcje za kazdym razem jak zmieniaja sie dane
     callback(Object.values(data ?? {}));
+  });
+
+export const observeOnlyNew = (url, callback) =>
+  onChildAdded(ref(database, `${url}/`), (snapshot) => {
+    const data = snapshot.val();
+    // przekazalismy setMessages jako callback, poniewaz chcemy uruchomic ta funkcje za kazdym razem jak zmieniaja sie dane
+    callback(data);
   });
 
 export const save = (url, data) => {
@@ -71,3 +86,13 @@ export const updateUser = (displayName, photoURL) =>
     displayName,
     photoURL,
   });
+
+const storage = getStorage();
+
+export const addFileToStorage = (file) => {
+  const fileDestination = storageRef(storage, `files/${file.name}`);
+
+  return uploadBytes(fileDestination, file).then(() =>
+    getDownloadURL(fileDestination)
+  );
+};

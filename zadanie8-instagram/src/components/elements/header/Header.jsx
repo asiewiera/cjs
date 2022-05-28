@@ -12,11 +12,7 @@ function Header() {
 
   const { currentUser } = useContext(MainContext);
 
-  console.log('Context currentUser', currentUser);
-
-  if (currentUser && currentUser.photoURL) {
-    console.log('currentUserUrl', currentUser.photoUrl);
-  }
+  // console.log('Context currentUser', currentUser);
 
   const signOut = () => {
     signOutUser().then(() => {

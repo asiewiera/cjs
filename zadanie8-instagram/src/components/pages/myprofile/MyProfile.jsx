@@ -17,6 +17,7 @@ function MyProfile() {
 
   const [displayName, setDisplayName] = useState(currentUser.displayName);
   const [photoURL, setphotoUrl] = useState(currentUser.photoURL);
+
   const [apiError, setAPiError] = useState('');
 
   const navigate = useNavigate();
