@@ -8,12 +8,14 @@ import Main from "@/components/layouts/main"
 
 
 export default function RepositoryPage({results}) {
-  console.log(results);
+  console.log(results.message);
   return (
     <Main>
     <Head>
       <title>Repository: </title>
     </Head>
+    <p>{results.full_name}</p>
+    <Link href ={results.html_url}>Go To</Link>
     {/* <div className="w-2/3 mx-auto">
         <h1 className="text-center">Search for: <span className="font-bold">
         {title}</span></h1>
@@ -46,7 +48,7 @@ export default function RepositoryPage({results}) {
 
 export async function getServerSideProps(context) {
 
-  let repoUrl=context.params.queryA;
+  let repoUrl=context.params.query;
   repoUrl =repoUrl.replace('-','/')
 
   console.log('owner repo',repoUrl)
